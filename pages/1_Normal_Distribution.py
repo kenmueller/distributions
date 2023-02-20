@@ -34,5 +34,5 @@ plt.plot(x, y)
 st.pyplot(plt.gcf())
 
 st.latex(r'''
-	\frac{1}{%.3f \sqrt{2 \pi}} e^{-\frac{1}{2}\left(\frac{x - %.3f}{%.3f}\right)}
+	\frac{1}{%.3f \sqrt{2 \pi}} e^{-\frac{1}{2}\left(\frac{x - %.3f}{%.3f}\right)^2}
 ''' % (std, mean, std))
