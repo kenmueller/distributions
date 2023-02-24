@@ -3,14 +3,18 @@ import numpy as np
 from scipy import integrate
 from matplotlib import pyplot as plt
 from sys import float_info
+from math import sqrt
 
 st.set_page_config(page_title='Beta Distribution')
 
 st.title('Beta Distribution')
 st.subheader('by Ken Mueller')
 
-parameters = st.radio(
-    'Parameters', ('a and b', 'μ and κ', 'ω and κ', 'μ and σ'))
+top_left, top_right = st.columns(2)
+
+with top_left:
+    parameters = st.radio(
+        'Parameters', ('a and b', 'μ and κ', 'ω and κ', 'μ and σ'))
 
 left, right = st.columns(2)
 
@@ -55,6 +59,25 @@ elif parameters == 'μ and σ':
     a = mean * (mean * (1 - mean) / standard_deviation ** 2 - 1)
     b = (1 - mean) * (mean * (1 - mean) / standard_deviation ** 2 - 1)
 
+with top_right:
+    st.latex(r'''
+        \begin{align*}
+            a &= %.3f \\
+            b &= %.3f \\
+            \mu &= %.3f \\
+            \omega &= %.3f \\
+            \kappa &= %.3f \\
+            \sigma &= %.3f
+        \end{align*}
+    ''' % (
+        a,  # a
+        b,  # b
+        a / (a + b),  # mean
+        (a - 1) / (a + b - 2),  # mode
+        a + b,  # concentration
+        sqrt((a * b) / ((a + b) ** 2 * (a + b + 1)))  # standard deviation
+    ))
+
 
 def beta_numerator(theta):
     return theta ** (a - 1) * (1 - theta) ** (b - 1)
@@ -68,7 +91,7 @@ def beta(theta):
     return beta_numerator(theta) / beta_denominator()
 
 
-x = np.linspace(float_info.epsilon, 1 - float_info.epsilon, 100)
+x = np.linspace(float_info.epsilon, 1 - float_info.epsilon, 500)
 y = [beta(theta) for theta in x]
 
 plt.plot(x, y)
